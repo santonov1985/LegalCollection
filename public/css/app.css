@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900&display=swap&subset=cyrillic');
+
+textarea {
+    resize: none;
+}
+.bootstrap-select {
+    border: 1px solid !important;
+    border-color: #d8dbe0 !important;
+    border-radius: .25rem !important;
+}
+.alert-error {
+    background-color: #636f83;
+    color: #ffffff;
+    position: fixed;
+    z-index: 99;
+    top: 30%;
+    left: 50%;
+    width: 350px;
+    margin-left: -175px;
+}
+.alert-error-close {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border: solid 1px #ffffff;
+    border-radius: 15px;
+    text-shadow: none;
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    font-size: 12px;
+    font-weight: 200;
+    color: #ffffff;
+    background-color: #636f83;
+    opacity: 1;
+}
+.alert-error-close:focus,
+.alert-error-close:hover {
+    font-weight: 700;
+    opacity: 1;
+}
+.removeSelect {
+    display: none;
+}
+.inn-search {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+}
