@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\ACL;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Role\Store;
 use Core\ACL\Permissions\Permission;
 use Core\ACL\Roles\RoleRepository;
 use Illuminate\Http\Request;
 use Core\ACL\Roles\Role;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class RoleController extends Controller
@@ -34,20 +34,8 @@ class RoleController extends Controller
         return view('acl.roles.create', compact('permissionsGroups'));
     }
 
-    public function store(Request $request)
+    public function store(Store $request)
     {
-        $rules = [
-            'name'          => 'required|string|unique:roles,name',
-            'description'   => 'nullable|string',
-            'permissions'   => 'nullable|array',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator->errors());
-        }
-
         try {
 
             $slug  = Str::slug($request->input('name'), '_');
@@ -69,7 +57,7 @@ class RoleController extends Controller
 
     public function edit(int $id)
     {
-        $role               = Role::findOrFail($id);
+        $role               = Role::query()->findOrFail($id);
         $permissionsGroups  = Permission::all()->groupBy('resource');
 
         return view('acl.roles.edit', compact('role', 'permissionsGroups'));
@@ -77,19 +65,7 @@ class RoleController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $rules = [
-            'name'          => 'required|string|unique:roles,name,' . $id,
-            'description'   => 'nullable|string',
-            'permissions'   => 'nullable|array',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator->errors());
-        }
-
-        $role = Role::findOrFail($id);
+        $role = Role::query()->findOrFail($id);
 
         try {
 
@@ -113,7 +89,7 @@ class RoleController extends Controller
 
     public function destroy(int $id)
     {
-        $role = Role::findOrFail($id);
+        $role = Role::query()->findOrFail($id);
         $role->delete();
 
         return redirect()->back();

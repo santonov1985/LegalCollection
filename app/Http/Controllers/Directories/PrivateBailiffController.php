@@ -57,10 +57,7 @@ class PrivateBailiffController extends Controller
     {
         $phone = UsersHelper::getActualPhone($request->input('phone'));
 
-        if (!empty($phone))
-        {
-            $phoneWithFirstNumeral = $this->service->addFirstNumber($phone);
-        }
+        $phoneWithFirstNumeral = $this->service->addFirstNumber($phone);
 
         try {
 

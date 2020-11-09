@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Users;
+namespace App\Http\Requests\Permission;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -29,12 +29,9 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'id'                => 'required|numeric',
-            'name'              => 'required|string',
-            'email'             => 'required|email|unique:users,email,' . $this->id,
-            'password'          => 'nullable|string|min:8|confirmed',
-            'current_password'  => 'nullable|string|min:8',
-            'role'              => 'required|numeric',
+            'id'        => 'required|numeric',
+            'name'      => 'required|string|unique:permissions,name,' . $this->id,
+            'resource'  => 'required|string|exists:permissions,resource',
         ];
     }
 }

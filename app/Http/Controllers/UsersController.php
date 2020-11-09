@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Role\Update;
 use App\Http\Requests\Users\Store;
 use Core\ACL\Roles\Role;
 use Core\Users\User;
@@ -73,22 +74,8 @@ class UsersController extends Controller
         return view('users.edit', compact('user', 'roles'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Update $request, int $id)
     {
-        $rules = [
-            'id'                => 'required|numeric',
-            'name'              => 'required|string',
-            'email'             => 'required|email|unique:users,email,' . $id,
-            'password'          => 'nullable|string|min:8|confirmed',
-            'current_password'  => 'nullable|string|min:8',
-            'role'              => 'required|numeric',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors());
-        }
 
         $user  = User::query()->findOrFail($request->input('id'));
         $roles = Role::query()->whereIn('id', $request->input('role'))->get();

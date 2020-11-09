@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\ACL;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Permission\Store;
+use App\Http\Requests\Permission\Update;
 use Core\ACL\Permissions\Permission;
 use Core\ACL\Permissions\PermissionRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class PermissionController extends Controller
 {
@@ -30,18 +30,8 @@ class PermissionController extends Controller
         return view('acl.permissions.resource');
     }
 
-    public function resourceStore(Request $request)
+    public function resourceStore(\App\Http\Requests\Resource\Store $request)
     {
-        $rules = [
-            'name' => 'required|string|unique:permissions,resource',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator->errors());
-        }
-
         try {
 
             $this->repository->addNewResource(
@@ -63,19 +53,8 @@ class PermissionController extends Controller
         return view('acl.permissions.create', compact('resource'));
     }
 
-    public function store(Request $request)
+    public function store(Store $request)
     {
-        $rules = [
-            'name'      => 'required|string|unique:permissions,name',
-            'resource'  => 'required|string|exists:permissions,resource',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator->errors());
-        }
-
         try {
 
             $this->repository->addNewPermission(
@@ -98,20 +77,8 @@ class PermissionController extends Controller
         return view('acl.permissions.edit', compact('permission'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Update $request, $id)
     {
-        $rules = [
-            'id'        => 'required|numeric',
-            'name'      => 'required|string|unique:permissions,name,' . $id,
-            'resource'  => 'required|string|exists:permissions,resource',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator->errors());
-        }
-
         $permission = Permission::query()->findOrFail($id);
 
         try {

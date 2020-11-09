@@ -42,7 +42,7 @@
                                 @if ($user->deleted_at)
                                     {{ $user->name }}
                                 @else
-                                    <a href="{{ route('user-edit', ['id' => $user->id]) }}" title="Редактировать {{ $user->name }}">{{ $user->name }}</a>
+                                    {{ $user->name }}
                                 @endif
                             </td>
                             <td>{{ $user->email }}</td>
