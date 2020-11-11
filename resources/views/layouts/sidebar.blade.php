@@ -13,6 +13,13 @@
             </a>
         </li>
 
+        <li class="c-sidebar-nav-item">
+            <a class="c-sidebar-nav-link" href="{{ route('main-table') }}">
+                <i class="fa fa-table c-sidebar-nav-icon"></i>
+                Таблицы
+            </a>
+        </li>
+
         <li class="c-sidebar-nav-item c-sidebar-nav-dropdown">
             <a class="c-sidebar-nav-link c-sidebar-nav-dropdown-toggle" href="#">
                 <i class="fa fa-list c-sidebar-nav-icon"></i>
@@ -36,7 +43,6 @@
                 @endCanAtLeast
             </ul>
         </li>
-
 
         <li class="c-sidebar-nav-item">
             <a class="c-sidebar-nav-link" href="{{ route('settings.index') }}">

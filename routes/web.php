@@ -22,6 +22,11 @@ Route::middleware('auth')->group(function () {
     //Home
     Route::get('/', 'HomeController@index')->name('home');
 
+    //Main Table
+    Route::get('/main-table', 'MainTableController@index')->name('main-table');
+    Route::get('/show-form', 'MainTableController@show')->name('show-form');
+    Route::post('/show-form/parsing', 'MainTableController@parsing')->name('parsing');
+
     //Logout
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
@@ -37,7 +42,7 @@ Route::middleware('auth')->group(function () {
     });
 
     //Settings
-    Route::resource('/settings','SettingController');
+    Route::get('/settings','SettingsController@index')->name('settings.index');
 
     //Notaries
     Route::group(['prefix' =>'notary', 'namespace' => 'Directories'], function () {
