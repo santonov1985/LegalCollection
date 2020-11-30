@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Users;
+namespace App\Http\Requests\NotaryTable;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Store extends FormRequest
+class Parsing extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,8 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required|string',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:8|confirmed',
-            'role'      => 'required|array',
+            'excelFile'    => 'required|mimes:xlsx',
+            'dayOfOverdue' => 'required'
         ];
     }
 }

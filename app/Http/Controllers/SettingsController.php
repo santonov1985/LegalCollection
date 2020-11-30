@@ -1,22 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
-use Rap2hpoutre\FastExcel\FastExcel;
-use Core\Users\User;
+use App\Http\Requests\NotarySetting\Store;
+use Core\Settings\Notary\DefaultSetting;
+use Core\Settings\Notary\DefaultSettingRepository;
 
 class SettingsController extends Controller
 {
-    protected $exportFile;
+    protected $repository;
 
-    public function __construct(FastExcel $FastExcel)
-    {
-        $this->exportFile = $FastExcel;
+    public function __construct(
+        DefaultSettingRepository $defaultSettingRepository
+    ) {
+        $this->repository = $defaultSettingRepository;
     }
-
     public function index()
     {
-        $users = User::all();
-//        return (new FastExcel($users))->download('file.xlsx');
-        return $this->exportFile->download('file.xlsx');
+        $defaultSettings = DefaultSetting::all();
+        return view('settings.default', compact('defaultSettings'));
+    }
+
+    public function store(Store $request, $id)
+    {
+        $defaultSetting = DefaultSetting::query()->findOrFail($id);
+        $this->repository->createDefaultSettings($defaultSetting, $request->input('notary_cost'));
     }
 }

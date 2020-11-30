@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Users;
+namespace App\Http\Requests\NotarySetting;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +13,7 @@ class Store extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,10 +24,7 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required|string',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:8|confirmed',
-            'role'      => 'required|array',
+            'notary_cost' => 'required'
         ];
     }
 }

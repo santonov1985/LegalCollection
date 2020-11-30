@@ -22,11 +22,6 @@ Route::middleware('auth')->group(function () {
     //Home
     Route::get('/', 'HomeController@index')->name('home');
 
-    //Main Table
-    Route::get('/main-table', 'MainTableController@index')->name('main-table');
-    Route::get('/show-form', 'MainTableController@show')->name('show-form');
-    Route::post('/show-form/parsing', 'MainTableController@parsing')->name('parsing');
-
     //Logout
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
@@ -64,6 +59,33 @@ Route::middleware('auth')->group(function () {
         Route::post('/update/{id}','PrivateBailiffController@update')->middleware(['canAtLeast:private_bailiff.update'])->name('privateBailiff-update');
         Route::get('/delete/{id}','PrivateBailiffController@destroy')->middleware(['canAtLeast:private_bailiff.delete'])->name('privateBailiff-delete');
         Route::get('/restore/{id}','PrivateBailiffController@restore')->middleware(['canAtLeast:private_bailiff.restore'])->name('privateBailiff-restore');
+    });
+
+    //Table-Notary
+    Route::group(['prefix' =>'table-notary', 'namespace' => 'Tables'], function () {
+        Route::get('/', 'NotaryController@index')->name('table-notary-index');
+        Route::get('/create', 'NotaryController@create')->name('table-notary-create');
+        Route::post('/store', 'NotaryController@store')->name('table-notary-store');
+        Route::get('/edit{id}','NotaryController@edit')->name('table-notary-edit');
+        Route::post('/update/{id}', 'NotaryController@update')->name('table-notary-update');
+        Route::get('/import', 'NotaryController@import')->name('table-notary-import');
+        Route::post('/parsing', 'NotaryController@parsing')->name('table-notary-parsing');
+        Route::get('/delete/{id}','NotaryController@destroy')->name('table-notary-delete');
+        Route::get('/restore/{id}', 'NotaryController@restore')->name('table-notary-restore');
+    });
+
+    //Table-PrivateBailiff
+    Route::group(['prefix' =>'table-privateBailiff', 'namespace' => 'Tables'], function () {
+        Route::get('/index', 'PrivateBailiffController@index')->name('table-privateBailiff-index');
+        Route::get('/show', 'MainTableController@show')->name('show-form');
+        Route::post('/show-form/parsing', 'MainTableController@parsing')->name('parsing');
+    });
+
+    //Settings
+    Route::group(['prefix' =>'settings'], function () {
+        Route::get('/index', 'SettingsController@index')->name('settings-index');
+        Route::post('/store/{id}', 'SettingsController@store')->name('settings-store');
+        Route::post('/show-form/parsing', 'MainTableController@parsing')->name('parsing');
     });
 
     //ACL

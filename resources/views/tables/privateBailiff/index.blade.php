@@ -9,7 +9,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between mb-3">
                 <div>
-                    <h4 class="card-title mb-0">Основная таблица</h4>
+                    <h4 class="card-title mb-0">Таблица ЧСИ</h4>
                 </div>
 
                 <div class="btn-toolbar">

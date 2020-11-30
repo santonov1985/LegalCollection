@@ -40,7 +40,7 @@ class UsersController extends Controller
 
     public function store(Store $request)
     {
-        $roles = Role::query()->whereIn('id', $request->input('role'))->get();
+        $roles = Role::query()->where('id', $request->input('role'))->get();
 
         try {
 

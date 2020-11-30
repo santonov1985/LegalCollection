@@ -13,13 +13,6 @@
             </a>
         </li>
 
-        <li class="c-sidebar-nav-item">
-            <a class="c-sidebar-nav-link" href="{{ route('main-table') }}">
-                <i class="fa fa-table c-sidebar-nav-icon"></i>
-                Таблицы
-            </a>
-        </li>
-
         <li class="c-sidebar-nav-item c-sidebar-nav-dropdown">
             <a class="c-sidebar-nav-link c-sidebar-nav-dropdown-toggle" href="#">
                 <i class="fa fa-list c-sidebar-nav-icon"></i>
@@ -44,12 +37,50 @@
             </ul>
         </li>
 
-        <li class="c-sidebar-nav-item">
-            <a class="c-sidebar-nav-link" href="{{ route('settings.index') }}">
-                <i class="fa fa-cogs c-sidebar-nav-icon"></i>
+        <li class="c-sidebar-nav-item c-sidebar-nav-dropdown">
+            <a class="c-sidebar-nav-link c-sidebar-nav-dropdown-toggle" href="#">
+                <i class="fa fa-table c-sidebar-nav-icon"></i>
+                Таблицы
+            </a>
+            <ul class="c-sidebar-nav-dropdown-items">
+                @canAtLeast('notary.view')
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link" href="{{route('table-notary-index')}}">
+                        Нотариусы
+                    </a>
+                </li>
+                @endCanAtLeast
+
+                @canAtLeast('private_bailiff.view')
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link" href="{{route('table-privateBailiff-index')}}">
+                        ЧСИ
+                    </a>
+                </li>
+                @endCanAtLeast
+            </ul>
+        </li>
+        @canAtLeast('notary.create')
+        <li class="c-sidebar-nav-item c-sidebar-nav-dropdown">
+            <a class="c-sidebar-nav-link c-sidebar-nav-dropdown-toggle" href="#">
+                <i class="fa fa-list c-sidebar-nav-icon"></i>
                 Настройки
             </a>
+            <ul class="c-sidebar-nav-dropdown-items">
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link" href="{{route('settings-index')}}">
+                        Нотариусы
+                    </a>
+                </li>
+
+                <li class="c-sidebar-nav-item">
+                    <a class="c-sidebar-nav-link" href="#">
+                        ЧСИ
+                    </a>
+                </li>
+            </ul>
         </li>
+        @endCanAtLeast
 
         @canAtLeast('users.view')
         <li class="c-sidebar-nav-item">

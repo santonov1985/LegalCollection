@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="btn-toolbar">
-                    <a href="#" class="btn btn-primary" title="Добавить">
+                    <a href="#Будет-доступна-позднее" class="btn btn-primary" title="Добавить">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
