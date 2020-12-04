@@ -20,6 +20,7 @@ class NotaryRepository
         float $delayed_fines,
         int $number_of_day_overdue,
         array $total,
+        string $transferDate,
         float $notary_cost = null,
         string $email = null,
         string $residence_address = null,
@@ -29,7 +30,6 @@ class NotaryRepository
     ): Notary
     {
         $notary = new Notary;
-
         $notary->number_loan = $number_loan;
         $notary->iin = $iin;
         $notary->identification = $identification;
@@ -48,6 +48,7 @@ class NotaryRepository
         $notary->delayed_fines = $delayed_fines;
         $notary->number_of_day_overdue = $number_of_day_overdue;
         $notary->total = $total[0];
+        $notary->transfer_date = $transferDate;
         $notary->notary_cost = $notary_cost;
         $notary->total_with_notary_cost = $total[1];
 
@@ -71,6 +72,7 @@ class NotaryRepository
      * @param double $delayed_fines
      * @param int $number_of_day_overdue
      * @param array $total
+     * @param string $transferDate
      * @param double|null $notary_cost
      * @param string|null $email
      * @param string|null $residence_address
@@ -96,6 +98,7 @@ class NotaryRepository
         float $delayed_fines,
         int $number_of_day_overdue,
         array $total,
+        string $transferDate,
         float $notary_cost = null,
         string $email = null,
         string $residence_address = null,
@@ -123,11 +126,16 @@ class NotaryRepository
         $notary->delayed_fines = $delayed_fines;
         $notary->number_of_day_overdue = $number_of_day_overdue;
         $notary->total = $total[0];
+        $notary->transfer_date = $transferDate;
         $notary->notary_cost = $notary_cost;
         $notary->total_with_notary_cost = $total[1];
 
         $notary->saveOrFail();
 
         return $notary;
+    }
+    public function manyUpdate()
+    {
+
     }
 }

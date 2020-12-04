@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label>Телефон:</label>
-                            <input type="text" name="phone" class="form-control">
+                            <input type="number" min="11" name="phone" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Описание:</label>

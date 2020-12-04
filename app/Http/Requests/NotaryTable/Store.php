@@ -25,7 +25,7 @@ class Store extends FormRequest
     {
         return [
             'number_loan' => 'required|unique:notaries_table,number_loan',
-            'iin' => 'required|unique:notaries_table,iin',
+            'iin' => 'required',
             'identification' => 'required|unique:notaries_table,identification',
             'full_name' => 'required',
             'email' => 'nullable',

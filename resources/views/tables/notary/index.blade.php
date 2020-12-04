@@ -4,6 +4,7 @@
 
     @include('alerts.error-alert')
     @include('alerts.message-alert')
+    @include('tables.notary.filter')
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -34,7 +35,7 @@
                         <th>Уд. личности</th>
                         <th>Ф.И.О</th>
                         <th>Мобильный телефон</th>
-                        <th>Дата выдачи</th>
+                        <th>Дата передачи Нотариусу</th>
                         <th>Срок займа</th>
                         <th>Выданная сумма</th>
                         <th>День просрочки</th>
@@ -44,6 +45,7 @@
                         <th>Сумма по исполнтьельной надаиси</th>
                         <th>Нотариальные расходы</th>
                         <th>Общая сумма с Нотариальными расходами</th>
+                        <th width="10%"></th>
                     </tr>
                     </thead>
 
@@ -62,7 +64,7 @@
                         <td>{{$notary_tables->identification}}</td>
                         <td>{{$notary_tables->full_name}}</td>
                         <td>{{$notary_tables->mobile_phone}}</td>
-                        <td>{{$notary_tables->date_of_issue}}</td>
+                        <td>{{$notary_tables->transfer_date}}</td>
                         <td>{{$notary_tables->loan_term}}</td>
                         <td>{{$notary_tables->issued_amount}}</td>
                         <td>{{$notary_tables->number_of_day_overdue}}</td>

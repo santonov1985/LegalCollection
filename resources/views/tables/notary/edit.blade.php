@@ -46,18 +46,18 @@
                         </div>
                         <div class="form-group">
                             <label>Домашний телефон:</label>
-                            <input type="text" name="home_phone" class="form-control" value="{{ $notaries_table->home_phone }}">
+                            <input type="number" name="home_phone" class="form-control" value="{{ $notaries_table->home_phone }}">
                         </div>
                         <div class="form-group">
                             <label>Мобильный телефон:</label>
-                            <input type="text" name="mobile_phone" class="form-control" value="{{ $notaries_table->mobile_phone }}" required>
+                            <input type="number" min="11" name="mobile_phone" class="form-control" value="{{ $notaries_table->mobile_phone }}" required>
                         </div>
                     </div>
 
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Рабочий телефон:</label>
-                            <input type="text" name="work_phone" class="form-control" value="{{ $notaries_table->work_phone }}">
+                            <input type="number" name="work_phone" class="form-control" value="{{ $notaries_table->work_phone }}">
                         </div>
                         <div class="form-group">
                             <label>Адрес проживания:</label>
@@ -108,6 +108,10 @@
                         <div class="form-group">
                             <label>Общая сумма с Нотариальными расходами:</label>
                             <input type="number" step="0.01" min="0" name="total_with_notary_cost" class="form-control" value="{{ $notaries_table->total_with_notary_cost }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Дата передачи Нотариусу:</label>
+                            <input type="date" name="transfer_date" class="form-control" value="{{ $notaries_table->transfer_date }}">
                         </div>
                     </div>
                     <div class="col-sm-4">

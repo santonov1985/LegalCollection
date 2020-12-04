@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $notary_cost
  * @property integer $total_with_notary_cost
  * @property integer $number_of_day_overdue
+ * @property string $transferDate
  * @property Carbon $deleted_at
  * @property Carbon $created_at
  * @property Carbon $updated_at

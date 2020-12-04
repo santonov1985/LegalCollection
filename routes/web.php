@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/parsing', 'NotaryController@parsing')->name('table-notary-parsing');
         Route::get('/delete/{id}','NotaryController@destroy')->name('table-notary-delete');
         Route::get('/restore/{id}', 'NotaryController@restore')->name('table-notary-restore');
+        Route::get('/search', 'NotaryController@search')->name('table-notary-search');
     });
 
     //Table-PrivateBailiff

@@ -19,24 +19,24 @@
             </div>
             <form action="{{route('table-notary-parsing')}}" method="post" enctype="multipart/form-data">
                 @csrf
-                <div class="col-md-12 b-b-1">
+                <div class="col-md-4 b-b-1">
                     <div class="form-group">
                         <label for="exampleFormControlFile1">Выберите файл</label>
                         <input type="file" class="form-control-file" name="excelFile" required>
                     </div>
                 </div>
 
-                <div class="col mt-3">
+                <div class="col-4 mt-3">
                     <div class="d-flex justify-content-between mb-3">
                         <div>
                             <h5 class="card-title mb-0">День просрочки</h5>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="number" min="0" step="1" name="dayOfOverdue" class="form-control" required>
+                        <input type="number" min="0" step="1" name="dayOfOverdue" class="form-control" value="0" required>
                     </div>
                 </div>
-                <div class="col d-flex justify-content-end mt-3">
+                <div class="col d-flex justify-content-sm-start mt-4">
                     <div class="btn-toolbar">
                         <button  type="submit" class="btn btn-primary" >Сформировать таблицу</button>
                     </div>

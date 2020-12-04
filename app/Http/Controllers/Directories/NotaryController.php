@@ -93,13 +93,7 @@ class NotaryController extends Controller
 
     public function update(Store $request, int $id)
     {
-        $phone = UsersHelper::getActualPhone($request->input('phone'));
-
-        if (!empty($phone))
-        {
-            $phoneWithFirstNumeral = $this->service->addFirstNumber($phone);
-        }
-
+        $mobilePhone = UsersHelper::getActualPhone($request->input('phone'));
 
         try {
             $notary = Notary::query()->findOrFail($id);
@@ -107,7 +101,7 @@ class NotaryController extends Controller
                 $notary,
                 $request->input('title'),
                 $request->input('email'),
-                $phoneWithFirstNumeral,
+                $mobilePhone,
                 $request->input('description')
             );
 

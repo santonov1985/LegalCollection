@@ -16,7 +16,7 @@ class CreateNotariesTableTable extends Migration
         Schema::create('notaries_table', function (Blueprint $table) {
             $table->id();
             $table->integer('number_loan')->unique();
-            $table->string('iin')->unique();
+            $table->string('iin');
             $table->string('identification')->unique();
             $table->string('full_name');
             $table->string('email')->nullable();
@@ -35,6 +35,8 @@ class CreateNotariesTableTable extends Migration
             $table->double('total')->nullable();
             $table->double('notary_cost')->nullable();
             $table->double('total_with_notary_cost')->nullable();
+            $table->string('transfer_date');
+//            $table->boolean('status');
             $table->softDeletes();
             $table->timestamps();
         });

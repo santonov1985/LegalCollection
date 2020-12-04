@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotarySetting\Store;
 use Core\Settings\Notary\DefaultSetting;
 use Core\Settings\Notary\DefaultSettingRepository;
+use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
@@ -23,6 +24,12 @@ class SettingsController extends Controller
     public function store(Store $request, $id)
     {
         $defaultSetting = DefaultSetting::query()->findOrFail($id);
-        $this->repository->createDefaultSettings($defaultSetting, $request->input('notary_cost'));
+        try {
+            $this->repository->createDefaultSettings($defaultSetting, $request->input('notary_cost'));
+            return redirect()->route('settings-index')->with('message', 'Сохранено!');
+        }catch (\Throwable $err) {
+            Log::error("Directories: update Notary-table error. " . $err->getMessage() . $err->getTraceAsString());
+            return redirect()->back()->withErrors(['Ошибка сохранения']);
+        }
     }
 }

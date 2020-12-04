@@ -25,7 +25,7 @@ class Update extends FormRequest
     {
         return [
             'number_loan' => 'required|unique:notaries_table,number_loan,' . $this->id,
-            'iin' => 'required|unique:notaries_table,iin,' . $this->id,
+            'iin' => 'required',
             'identification' => 'required|unique:notaries_table,identification,' . $this->id,
             'full_name' => 'required',
             'email' => 'nullable',

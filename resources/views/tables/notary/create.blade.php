@@ -45,11 +45,11 @@
                         </div>
                         <div class="form-group">
                             <label>Домашний телефон:</label>
-                            <input type="text" name="home_phone" class="form-control">
+                            <input type="number" name="home_phone" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Мобильный телефон:</label>
-                            <input type="text" name="mobile_phone" class="form-control" required>
+                            <input type="number" min="11" name="mobile_phone" class="form-control" required>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -108,6 +108,10 @@
                         <div class="form-group">
                             <label>Общая сумма с Нотариальными расходами:</label>
                             <input type="number" min="0" step="0.01" name="total_with_notary_cost" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Дата передачи Нотариусу:</label>
+                            <input type="date" min="0" step="0.01" name="transfer_date" class="form-control">
                         </div>
                     </div>
                     <div class="col-sm-4">

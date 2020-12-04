@@ -40,7 +40,7 @@ class NotaryController extends Controller
 
     public function create()
     {
-        $notary_costs = DefaultSetting::get(array('notary_cost'));
+        $notary_costs = DefaultSetting::get(['notary_cost']);
         return view('tables.notary.create',compact('notary_costs'));
     }
 
@@ -58,7 +58,6 @@ class NotaryController extends Controller
         );
 
         try {
-
             $this->repository->createNotary(
                 $request->input('number_loan'),
                 $request->input('iin'),
@@ -73,6 +72,7 @@ class NotaryController extends Controller
                 $request->input('delayed_fines'),
                 $request->input('number_of_day_overdue'),
                 $total,
+                $request->input('transfer_date'),
                 $request->input('notary_cost'),
                 $request->input('email'),
                 $request->input('residence_address'),
@@ -103,6 +103,7 @@ class NotaryController extends Controller
         $workPhone = UsersHelper::getActualPhone($request->input('work_phone'));
 
         $notary = Notary::query()->findOrFail($id);
+//        $notary = Notary::query()->updateOrCreate()->findOrFail($id);
 
         $total = $this->service->getTotal(
             $request->input('delayed_od'),
@@ -129,6 +130,7 @@ class NotaryController extends Controller
                 $request->input('delayed_fines'),
                 $request->input('number_of_day_overdue'),
                 $total,
+                $request->input('transfer_date'),
                 $request->input('notary_cost'),
                 $request->input('email'),
                 $request->input('residence_address'),
@@ -152,6 +154,10 @@ class NotaryController extends Controller
 
     public function parsing(Parsing $request)
     {
+        //получаем Нотариальные расходы с базы default_settings
+        $notary_cost = DefaultSetting::query()->where('id', '1')->value('notary_cost');
+
+        // импорт excel файла
         if ($request->hasFile('excelFile')) {
             $collections = (new FastExcel)->withoutHeaders()->import($request->file('excelFile'));
 
@@ -159,16 +165,23 @@ class NotaryController extends Controller
                 if (!empty($collection[0]) && is_numeric($collection[0])) {
                     if ($collection[23] >= $request->dayOfOverdue) {
 
+                    // приводим номера телефонов в правельный вид
                     $homePhone = UsersHelper::getActualPhone($collection[6]);
                     $mobilePhone = UsersHelper::getActualPhone($collection[7]);
                     $workPhone = UsersHelper::getActualPhone($collection[8]);
 
+                    // получаем сумму 4-х полей (Просрочка ОД, Просрочка %, Просрочка штрафы и Общая сумма с Нот. расх)
                     $total = $this->service->getTotal(
                         $collection[15],
                         $collection[16],
                         $collection[17],
-                        $notary_cost = null
+                        $notary_cost
                     );
+
+                        $getRepeat = Notary::query()->where('number_loan', $collection[0])->first();
+                        if ($getRepeat != null) {
+                            continue;
+                        }
 
                     try {
                         $this->repository->createNotary(
@@ -185,6 +198,7 @@ class NotaryController extends Controller
                             $collection[17],
                             $collection[23],
                             $total,
+                            $transferDate = Carbon::now()->format("Y-m-d"),
                             $notary_cost,
                             $collection[5],
                             $collection[10],
@@ -198,7 +212,6 @@ class NotaryController extends Controller
                         return redirect()->back()->withErrors(['Ошибка сохранения']);
                     }
                     }
-
                 }
             }
             return redirect()->route('table-notary-index')->with('message', 'Сохранено!');
@@ -219,6 +232,17 @@ class NotaryController extends Controller
         $brand->restore();
 
         return redirect()->back();
+    }
+    public function search(Request $request)
+    {
+    $notaryTablesSearches = Notary::withTrashed()
+        ->where('number_loan', 'like', $request->input('search'))
+        ->orWhere('iin', 'like', $request->input('search'))
+        ->orWhere('identification', 'like', $request->input('search'))
+        ->orWhere('full_name', 'like', '%' .$request->input('search'). '%')
+        ->orderByDesc('created_at')
+        ->get();
+    return view('tables.notary.search', compact('notaryTablesSearches'));
     }
 
 }
