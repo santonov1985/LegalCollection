@@ -15,6 +15,8 @@ class CreateNotariesTableTable extends Migration
     {
         Schema::create('notaries_table', function (Blueprint $table) {
             $table->id();
+            $table->integer('notary_id')->unsigned();
+            $table->foreign('notary_id')->references('id')->on('notaries')->cascadeOnDelete();
             $table->integer('number_loan')->unique();
             $table->string('iin');
             $table->string('identification')->unique();

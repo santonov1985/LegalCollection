@@ -19,7 +19,7 @@
                 Справочники
             </a>
             <ul class="c-sidebar-nav-dropdown-items">
-                @canAtLeast('notary.view')
+                @canAtLeast('notaries_directory.view')
                 <li class="c-sidebar-nav-item">
                     <a class="c-sidebar-nav-link" href="{{route('notary-index')}}">
                         Нотариусы
@@ -43,7 +43,7 @@
                 Таблицы
             </a>
             <ul class="c-sidebar-nav-dropdown-items">
-                @canAtLeast('notary.view')
+                @canAtLeast('notaries_directory.view')
                 <li class="c-sidebar-nav-item">
                     <a class="c-sidebar-nav-link" href="{{route('table-notary-index')}}">
                         Нотариусы
@@ -60,7 +60,7 @@
                 @endCanAtLeast
             </ul>
         </li>
-        @canAtLeast('notary.create')
+        @canAtLeast('settings_notary.view')
         <li class="c-sidebar-nav-item c-sidebar-nav-dropdown">
             <a class="c-sidebar-nav-link c-sidebar-nav-dropdown-toggle" href="#">
                 <i class="fa fa-list c-sidebar-nav-icon"></i>

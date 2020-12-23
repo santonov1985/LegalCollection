@@ -36,18 +36,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/history', 'AccountController@history')->name('account-history');
     });
 
-    //Settings
-    Route::get('/settings','SettingsController@index')->name('settings.index');
+//    //Settings
+//    Route::get('/settings','SettingsController@index')->name('settings.index');
 
-    //Notaries
+    //NotariesDirectory
     Route::group(['prefix' =>'notary', 'namespace' => 'Directories'], function () {
-        Route::get('/','NotaryController@index')->middleware(['canAtLeast:notary.view'])->name('notary-index');
-        Route::get('/create','NotaryController@create')->middleware(['canAtLeast:notary.create'])->name('notary-create');
-        Route::post('/store','NotaryController@store')->middleware(['canAtLeast:notary.create'])->name('notary-store');
-        Route::get('/edit/{id}','NotaryController@edit')->middleware(['canAtLeast:notary.update'])->name('notary-edit');
-        Route::post('/update/{id}','NotaryController@update')->middleware(['canAtLeast:notary.update'])->name('notary-update');
-        Route::get('/delete/{id}','NotaryController@destroy')->middleware(['canAtLeast:notary.delete'])->name('notary-delete');
-        Route::get('/restore/{id}', 'NotaryController@restore')->middleware(['canAtLeast:notary.restore'])->name('notary-restore');
+        Route::get('/','NotaryController@index')->middleware(['canAtLeast:notaries_directory.view'])->name('notary-index');
+        Route::get('/create','NotaryController@create')->middleware(['canAtLeast:notaries_directory.create'])->name('notary-create');
+        Route::post('/store','NotaryController@store')->middleware(['canAtLeast:notaries_directory.create'])->name('notary-store');
+        Route::get('/edit/{id}','NotaryController@edit')->middleware(['canAtLeast:notaries_directory.update'])->name('notary-edit');
+        Route::post('/update/{id}','NotaryController@update')->middleware(['canAtLeast:notaries_directory.update'])->name('notary-update');
+        Route::get('/delete/{id}','NotaryController@destroy')->middleware(['canAtLeast:notaries_directory.delete'])->name('notary-delete');
+        Route::get('/restore/{id}', 'NotaryController@restore')->middleware(['canAtLeast:notaries_directory.restore'])->name('notary-restore');
     });
 
     //PrivateBailiff
@@ -61,18 +61,21 @@ Route::middleware('auth')->group(function () {
         Route::get('/restore/{id}','PrivateBailiffController@restore')->middleware(['canAtLeast:private_bailiff.restore'])->name('privateBailiff-restore');
     });
 
-    //Table-Notary
+    //NotaryTable
     Route::group(['prefix' =>'table-notary', 'namespace' => 'Tables'], function () {
-        Route::get('/', 'NotaryController@index')->name('table-notary-index');
-        Route::get('/create', 'NotaryController@create')->name('table-notary-create');
-        Route::post('/store', 'NotaryController@store')->name('table-notary-store');
-        Route::get('/edit{id}','NotaryController@edit')->name('table-notary-edit');
-        Route::post('/update/{id}', 'NotaryController@update')->name('table-notary-update');
-        Route::get('/import', 'NotaryController@import')->name('table-notary-import');
-        Route::post('/parsing', 'NotaryController@parsing')->name('table-notary-parsing');
-        Route::get('/delete/{id}','NotaryController@destroy')->name('table-notary-delete');
-        Route::get('/restore/{id}', 'NotaryController@restore')->name('table-notary-restore');
-        Route::get('/search', 'NotaryController@search')->name('table-notary-search');
+        Route::get('/', 'NotaryController@index')->middleware(['canAtLeast:notary_table.view'])->name('table-notary-index');
+        Route::get('/create', 'NotaryController@create')->middleware(['canAtLeast:notary_table.create'])->name('table-notary-create');
+        Route::post('/store', 'NotaryController@store')->middleware(['canAtLeast:notary_table.create'])->name('table-notary-store');
+        Route::get('/edit{id}','NotaryController@edit')->middleware(['canAtLeast:notary_table.update'])->name('table-notary-edit');
+        Route::post('/update/{id}', 'NotaryController@update')->middleware(['canAtLeast:notary_table.update'])->name('table-notary-update');
+        Route::get('/import', 'NotaryController@import')->middleware(['canAtLeast:notary_table.create'])->name('table-notary-import');
+        Route::post('/parsing', 'NotaryController@parsing')->middleware(['canAtLeast:notary_table.create'])->name('table-notary-parsing');
+        Route::get('/delete/{id}','NotaryController@destroy')->middleware(['canAtLeast:notary_table.delete'])->name('table-notary-delete');
+        Route::get('/restore/{id}', 'NotaryController@restore')->middleware(['canAtLeast:notary_table.restore'])->name('table-notary-restore');
+        Route::get('/search', 'NotaryController@search')->middleware(['canAtLeast:notary_table.view'])->name('table-notary-search');
+        Route::get('/export', 'NotaryController@export')->middleware(['canAtLeast:notary_table.create'])->name('table-notary-export');
+        Route::get('/checkForm', 'NotaryController@check')->middleware(['canAtLeast:notary_table.create'])->name('table-notary-checkForm');
+        Route::post('/parseCheck', 'NotaryController@parseCheck')->name('table-notary-parseCheck');
     });
 
     //Table-PrivateBailiff
@@ -84,9 +87,9 @@ Route::middleware('auth')->group(function () {
 
     //Settings
     Route::group(['prefix' =>'settings'], function () {
-        Route::get('/index', 'SettingsController@index')->name('settings-index');
-        Route::post('/store/{id}', 'SettingsController@store')->name('settings-store');
-        Route::post('/show-form/parsing', 'MainTableController@parsing')->name('parsing');
+        Route::get('/index', 'SettingsController@index')->middleware(['canAtLeast:settings_notary.view'])->name('settings-index');
+        Route::post('/store/{id}', 'SettingsController@store')->middleware(['canAtLeast:settings_notary.update'])->name('settings-store');
+//        Route::post('/show-form/parsing', 'MainTableController@parsing')->name('parsing');
     });
 
     //ACL

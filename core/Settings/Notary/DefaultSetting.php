@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class DefaultSetting
- * @package Core\Settings\Notary
+ * @package Core\Settings\NotaryTable
  *
  * @property float $notary_cost
  */

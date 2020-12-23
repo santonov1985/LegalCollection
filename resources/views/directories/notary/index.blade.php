@@ -13,7 +13,7 @@
                 </div>
                 <div class="btn-toolbar">
 
-                    @canAtLeast('notary.create')
+                    @canAtLeast('notaries_directory.create')
                     <a href="{{route('notary-create')}}" class="btn btn-primary" title="Добавить">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -57,19 +57,19 @@
                             <td class="text-right">
                                 @if ($notary->deleted_at)
 
-                                    @canAtLeast('notary.restore')
+                                    @canAtLeast('notaries_directory.restore')
                                     <a href="{{ route('notary-restore', ['id' => $notary->id]) }}" class="btn btn-success btn-sm btn-restore" title="Востановить {{ $notary->title }}">
                                         <i class="fa fa-trash-o"></i>
                                     </a>
                                     @endCanAtLeast
                                 @else
-                                    @canAtLeast('notary.create')
+                                    @canAtLeast('notaries_directory.create')
                                     <a href="{{ route('notary-edit', ['id' => $notary->id]) }}" class="btn btn-light btn-sm" title="Редактировать {{ $notary->title }}">
                                         <i class="fa fa-cog"></i>
                                     </a>
                                     @endCanAtLeast
 
-                                    @canAtLeast('notary.delete')
+                                    @canAtLeast('notaries_directory.delete')
                                     <a href="{{ route('notary-delete', ['id' => $notary->id]) }}" class="btn btn-danger btn-sm btn-delete" title="Удалить {{ $notary->title }}">
                                         <i class="fa fa-trash"></i>
                                     </a>

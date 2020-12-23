@@ -52,6 +52,18 @@
                             <label>Мобильный телефон:</label>
                             <input type="number" min="11" name="mobile_phone" class="form-control" value="{{ $notaries_table->mobile_phone }}" required>
                         </div>
+                        <div class="form-group">
+                            <label>Нотариус:</label>
+                            <select class="form-control" name="notary_id">
+                                @foreach($notaries as $notary)
+                                    @if ($notary->id === $notaries_table->notary_id)
+                                        <option value="{{ $notary->id }}" selected>{{ $notary->title }}</option>
+                                    @else
+                                        <option value="{{ $notary->id }}">{{ $notary->title }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-sm-4">

@@ -65,7 +65,7 @@ class NotaryController extends Controller
 
             return redirect()->route('notary-index')->with('message', 'Добавлено!');
         }catch (\Throwable $err){
-            Log::error("Directories: add new Notary error. " . $err->getMessage() . $err->getTraceAsString());
+            Log::error("Directories: add new NotaryTable error. " . $err->getMessage() . $err->getTraceAsString());
             return redirect()->back()->withErrors(['Ошибка добавления']);
         }
 
@@ -108,7 +108,7 @@ class NotaryController extends Controller
             return redirect()->route('notary-index')->with('message', 'Сохранено!');
 
         }catch (\Throwable $err){
-            Log::error("Directories: update Notary error. " . $err->getMessage() . $err->getTraceAsString());
+            Log::error("Directories: update NotaryTable error. " . $err->getMessage() . $err->getTraceAsString());
             return redirect()->back()->withErrors(['Ошибка сохранения']);
         }
     }

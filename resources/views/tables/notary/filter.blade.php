@@ -9,28 +9,29 @@
                             name="search"
                             value="{{ request()->search ?? '' }}"
                             class="form-control"
-                            placeholder="Номер займа, ИИН, Удостоверение личности, Ф.И.О">
+                            placeholder="Номер займа, ИИН, удостоверение личности, Ф.И.О, день прострочки">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-light">Искать</button>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <select name="company" class="custom-select" onchange="this.form.submit()">
-                        <option value="" hidden>По нотариусу</option>
-                        <option value="">Все нотариусы</option>
 
-{{--                        @foreach($companies as $company)--}}
-{{--                            @if(request()->company == $company->id)--}}
-{{--                                <option value="{{ $company->id }}" selected>{{ $company->name }}</option>--}}
-{{--                            @else--}}
-{{--                                <option value="{{ $company->id }}">{{ $company->name }}</option>--}}
-{{--                            @endif--}}
-{{--                        @endforeach--}}
+                <div class="col-md-2">
+                    <select name="notary" class="custom-select" onchange="this.form.submit()">
+                        <option value="" hidden> По нотариусу </option>
+                        <option value="" > Все нотариусы </option>
+                        @foreach($notaries as $notary)
+                            @if(request()->notary == $notary->id)
+                                <option value="{{ $notary->id }}" selected>{{ $notary->title }}</option>
+                            @else
+                                <option value="{{ $notary->id }}">{{ $notary->title }}</option>
+                            @endif
+                        @endforeach
                     </select>
                 </div>
+
                 <div class="col-md-2">
-                    <select name="status" class="custom-select" onchange="this.form.submit()">
+                    <select name="privateBailiff" class="custom-select" onchange="this.form.submit()">
                         <option value="" hidden>По ЧСИ</option>
                         <option value="">Все статусы</option>
 
@@ -44,18 +45,7 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <select name="employee" class="custom-select" onchange="this.form.submit()">
-                        <option value="" hidden>По сотруднику</option>
-                        <option value="">Все сотрудники</option>
-
-{{--                        @foreach($employees as $employee)--}}
-{{--                            @if(request()->employee == $employee->id)--}}
-{{--                                <option value="{{ $employee->id }}" selected>{{ $employee->name }}</option>--}}
-{{--                            @else--}}
-{{--                                <option value="{{ $employee->id }}">{{ $employee->name }}</option>--}}
-{{--                            @endif--}}
-{{--                        @endforeach--}}
-                    </select>
+                    <input type="date" name="transfer_date" class="form-control" onchange="this.form.submit()" value="{{ request()->transfer_date ?? '' }}">
                 </div>
             </div>
         </form>

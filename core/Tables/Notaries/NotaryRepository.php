@@ -2,16 +2,36 @@
 
 namespace Core\Tables\Notaries;
 
+use Core\Directories\Notaries\Notary;
 use Throwable;
 
 class NotaryRepository
 {
+    /**
+     * @param string|null $string
+     * @param Notary|null $notary
+     * @param string|null $date
+     * @return mixed
+     */
+    public function getSearch(
+        string $string = null,
+        Notary $notary = null,
+        string $date = null
+    )
+    {
+        return NotaryTable::search($string)
+            ->notary($notary)
+            ->date($date)
+            ->paginate(20);
+    }
+
     public function createNotary(
         int $number_loan,
         string $iin,
         string $identification,
         string $full_name,
         string $mobile_phone,
+        int $notary_id,
         string $date_of_issue,
         int $loan_term,
         int $issued_amount,
@@ -27,9 +47,9 @@ class NotaryRepository
         string $place_of_residence = null,
         string $home_phone = null,
         string $work_phone = null
-    ): Notary
+    ): NotaryTable
     {
-        $notary = new Notary;
+        $notary = new NotaryTable;
         $notary->number_loan = $number_loan;
         $notary->iin = $iin;
         $notary->identification = $identification;
@@ -37,6 +57,7 @@ class NotaryRepository
         $notary->email = $email;
         $notary->home_phone = $home_phone;
         $notary->mobile_phone = $mobile_phone;
+        $notary->notary_id = $notary_id;
         $notary->work_phone = $work_phone;
         $notary->residence_address = $residence_address;
         $notary->place_of_residence = $place_of_residence;
@@ -58,12 +79,13 @@ class NotaryRepository
     }
 
     /**
-     * @param Notary $notary
+     * @param NotaryTable $notary
      * @param int $number_loan
      * @param string $iin
      * @param string $identification
      * @param string $full_name
      * @param string $mobile_phone
+     * @param int $notary_id
      * @param string $date_of_issue
      * @param int $loan_term
      * @param int $issued_amount
@@ -79,17 +101,18 @@ class NotaryRepository
      * @param string|null $place_of_residence
      * @param string|null $home_phone
      * @param string|null $work_phone
-     * @return Notary
+     * @return NotaryTable
      * @throws Throwable
      */
 
     public function updateNotary(
-        Notary $notary,
+        NotaryTable $notary,
         int $number_loan,
         string $iin,
         string $identification,
         string $full_name,
         string $mobile_phone,
+        int $notary_id,
         string $date_of_issue,
         int $loan_term,
         int $issued_amount,
@@ -105,7 +128,7 @@ class NotaryRepository
         string $place_of_residence = null,
         string $home_phone = null,
         string $work_phone = null
-    ): Notary
+    ): NotaryTable
 
     {
         $notary->number_loan = $number_loan;
@@ -115,6 +138,7 @@ class NotaryRepository
         $notary->email = $email;
         $notary->home_phone = $home_phone;
         $notary->mobile_phone = $mobile_phone;
+        $notary->notary_id = $notary_id;
         $notary->work_phone = $work_phone;
         $notary->residence_address = $residence_address;
         $notary->place_of_residence = $place_of_residence;

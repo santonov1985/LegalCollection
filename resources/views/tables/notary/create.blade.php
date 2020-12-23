@@ -51,6 +51,16 @@
                             <label>Мобильный телефон:</label>
                             <input type="number" min="11" name="mobile_phone" class="form-control" required>
                         </div>
+                        <div class="form-group">
+                            <label>Нотариус:</label>
+                            <select class="form-control" name="notary_id">
+                                <option value="" hidden>Выберите нотариус</option>
+
+                                @foreach($notaries as $notary)
+                                    <option value="{{ $notary->id }}">{{ $notary->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
@@ -102,7 +112,7 @@
                         @foreach($notary_costs as $cost)
                         <div class="form-group">
                             <label>Нотариальные расходы:</label>
-                            <input type="number" min="0" step="0.01" name="notary_cost" class="form-control" value="{{$cost->notary_cost}}">
+                            <input type="number" min="0" step="0.01" name="notary_cost" class="form-control" value="{{ $cost->notary_cost }}">
                         </div>
                         @endforeach
                         <div class="form-group">
@@ -111,7 +121,7 @@
                         </div>
                         <div class="form-group">
                             <label>Дата передачи Нотариусу:</label>
-                            <input type="date" min="0" step="0.01" name="transfer_date" class="form-control">
+                            <input type="date" min="0" step="0.01" name="transfer_date" class="form-control" value="{{ $nowDate }}">
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -123,7 +133,6 @@
                     <a href="{{ route('table-notary-index') }}" class="btn btn-light">Отмена</a>
                 </div>
             </form>
-
         </div>
     </div>
 @endsection

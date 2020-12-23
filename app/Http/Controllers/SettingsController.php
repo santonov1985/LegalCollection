@@ -28,7 +28,7 @@ class SettingsController extends Controller
             $this->repository->createDefaultSettings($defaultSetting, $request->input('notary_cost'));
             return redirect()->route('settings-index')->with('message', 'Сохранено!');
         }catch (\Throwable $err) {
-            Log::error("Directories: update Notary-table error. " . $err->getMessage() . $err->getTraceAsString());
+            Log::error("Directories: update NotaryTable-table error. " . $err->getMessage() . $err->getTraceAsString());
             return redirect()->back()->withErrors(['Ошибка сохранения']);
         }
     }

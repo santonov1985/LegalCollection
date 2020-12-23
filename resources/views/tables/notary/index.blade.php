@@ -12,7 +12,7 @@
                 <div>
                     <h4 class="card-title mb-0">Таблица по Нотариусам</h4>
                 </div>
-                @canAtLeast('notary.create')
+                @canAtLeast('notary_table.create')
                 <div class="btn-toolbar">
                     <a href="{{route('table-notary-create')}}" class="btn btn-primary mr-3" title="Добавить данные">
                         <i class="fa fa-plus"></i>
@@ -24,9 +24,12 @@
                 @endCanAtLeast
             </div>
 
+            <div class="float-right">
+                {{ $notariesTable->links() }}
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-bordered table-responsive-md text-md-center text-value-sm">
-                    <caption>Таблица по Нотариусам</caption>
                     <thead class="table-dark">
                     <tr>
                         <th>№</th>
@@ -49,48 +52,48 @@
                     </tr>
                     </thead>
 
-                    @foreach($notaries_table as $notary_tables)
+                    @foreach($notariesTable as $notaryTable)
                     <tbody class="table-light">
-                    <tr class="{{ $notary_tables->deleted_at?'bg-gray-200':''}}">
-                        <td>{{$notary_tables->id}}</td>
-                        <td>{{$notary_tables->number_loan}}</td>
+                    <tr class="{{ $notaryTable->deleted_at?'bg-gray-200':''}}">
+                        <td>{{ $notaryTable->id }}</td>
+                        <td>{{ $notaryTable->number_loan }}</td>
                         <td>
-                        @if ($notary_tables->deleted_at)
-                            {{ $notary_tables->iin }}
+                        @if ($notaryTable->deleted_at)
+                            {{ $notaryTable->iin }}
                         @else
-                            {{ $notary_tables->iin }}
+                            {{ $notaryTable->iin }}
                         @endif
                         </td>
-                        <td>{{$notary_tables->identification}}</td>
-                        <td>{{$notary_tables->full_name}}</td>
-                        <td>{{$notary_tables->mobile_phone}}</td>
-                        <td>{{$notary_tables->transfer_date}}</td>
-                        <td>{{$notary_tables->loan_term}}</td>
-                        <td>{{$notary_tables->issued_amount}}</td>
-                        <td>{{$notary_tables->number_of_day_overdue}}</td>
-                        <td>{{$notary_tables->delayed_od}}</td>
-                        <td>{{$notary_tables->delayed_prc}}</td>
-                        <td>{{$notary_tables->delayed_fines}}</td>
-                        <td>{{$notary_tables->total}}</td>
-                        <td>{{$notary_tables->notary_cost}}</td>
-                        <td>{{$notary_tables->total_with_notary_cost}}</td>
+                        <td>{{ $notaryTable->identification }}</td>
+                        <td>{{ $notaryTable->full_name }}</td>
+                        <td>{{ $notaryTable->mobile_phone }}</td>
+                        <td>{{ $notaryTable->transfer_date }}</td>
+                        <td>{{ $notaryTable->loan_term }}</td>
+                        <td>{{ $notaryTable->issued_amount }}</td>
+                        <td>{{ $notaryTable->number_of_day_overdue }}</td>
+                        <td>{{ $notaryTable->delayed_od }}</td>
+                        <td>{{ $notaryTable->delayed_prc }}</td>
+                        <td>{{ $notaryTable->delayed_fines }}</td>
+                        <td>{{ $notaryTable->total }}</td>
+                        <td>{{ $notaryTable->notary_cost }}</td>
+                        <td>{{ $notaryTable->total_with_notary_cost }}</td>
                         <td class="text-right">
-                            @if ($notary_tables->deleted_at)
+                            @if ($notaryTable->deleted_at)
 
-                                @canAtLeast('notary.restore')
-                                <a href="{{ route('table-notary-restore', ['id' => $notary_tables->id]) }}" class="btn btn-success btn-sm btn-restore" title="Востановить запись с ИИН-ом {{ $notary_tables->iin }}">
+                                @canAtLeast('notary_table.restore')
+                                <a href="{{ route('table-notary-restore', ['id' => $notaryTable->id]) }}" class="btn btn-success btn-sm btn-restore" title="Востановить запись с ИИН-ом {{ $notaryTable->iin }}">
                                     <i class="fa fa-trash-o"></i>
                                 </a>
                                 @endCanAtLeast
                             @else
-                                @canAtLeast('notary.create')
-                                <a href="{{ route('table-notary-edit', ['id' => $notary_tables->id]) }}" class="btn btn-dark btn-sm" title="Редактировать запись с ИИН-ом {{ $notary_tables->iin }}">
+                                @canAtLeast('notary_table.create')
+                                <a href="{{ route('table-notary-edit', ['id' => $notaryTable->id]) }}" class="btn btn-dark btn-sm" title="Редактировать запись с ИИН-ом {{ $notaryTable->iin }}">
                                     <i class="fa fa-cog"></i>
                                 </a>
                                 @endCanAtLeast
 
-                                @canAtLeast('notary.delete')
-                                <a href="{{ route('table-notary-delete', ['id' => $notary_tables->id]) }}" class="btn btn-danger btn-sm btn-delete" title="Удалить запись с ИИН-ом {{ $notary_tables->iin }}">
+                                @canAtLeast('notary_table.delete')
+                                <a href="{{ route('table-notary-delete', ['id' => $notaryTable->id]) }}" class="btn btn-danger btn-sm btn-delete" title="Удалить запись с ИИН-ом {{ $notaryTable->iin }}">
                                     <i class="fa fa-trash"></i>
                                 </a>
                                 @endCanAtLeast
@@ -100,6 +103,9 @@
                     </tbody>
                     @endforeach
                 </table>
+                <div class="float-right">
+                    {{ $notariesTable->links() }}
+                </div>
             </div>
         </div>
     </div>

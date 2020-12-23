@@ -7,14 +7,18 @@ use App\Http\Helpers\UsersHelper;
 use App\Http\Requests\NotaryTable\Parsing;
 use App\Http\Requests\NotaryTable\Store;
 use App\Http\Requests\NotaryTable\Update;
+use Box\Spout\Writer\Style\StyleBuilder;
 use Core\Settings\Notary\DefaultSetting;
-use Core\Tables\Notaries\Notary;
+use Core\Tables\Notaries\NotaryTable;
 use Core\Tables\Notaries\NotaryRepository;
 use Core\Tables\Notaries\NotaryService;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Carbon\Carbon;
+use Core\Directories\Notaries\Notary;
+
 
 class NotaryController extends Controller
 {
@@ -31,17 +35,25 @@ class NotaryController extends Controller
 
     public function index()
     {
-        $notaries_table = Notary::withTrashed()
+        //$notaries - для отображение Нотариусов в Фильтре
+        $notaries = Notary::all();
+
+        $notariesTable = NotaryTable::withTrashed()
             ->orderByDesc('updated_at')
             ->paginate(20);
 
-        return view('tables.notary.index',compact('notaries_table'));
+        return view('tables.notary.index',compact('notariesTable','notaries'));
     }
 
     public function create()
     {
+        $nowDate = Carbon::now()->format("Y-m-d");
         $notary_costs = DefaultSetting::get(['notary_cost']);
-        return view('tables.notary.create',compact('notary_costs'));
+        $notaries = Notary::all();
+        return view('tables.notary.create',compact(
+              'notary_costs',
+            'notaries',
+                      'nowDate'));
     }
 
     public function store(Store $request)
@@ -64,6 +76,7 @@ class NotaryController extends Controller
                 $request->input('identification'),
                 $request->input('full_name'),
                 $mobilePhone,
+                $request->notary_id,
                 $request->input('date_of_issue'),
                 $request->input('loan_term'),
                 $request->input('issued_amount'),
@@ -83,15 +96,16 @@ class NotaryController extends Controller
 
             return redirect()->route('table-notary-index')->with('message', 'Добавлено!');
         }catch (\Throwable $err){
-            Log::error("Directories: add new Notary-table error. " . $err->getMessage() . $err->getTraceAsString());
+            Log::error("Directories: add new NotaryTable-table error. " . $err->getMessage() . $err->getTraceAsString());
             return redirect()->back()->withErrors(['Ошибка добавления']);
         }
     }
 
     public function edit(int $id)
     {
-        $notaries_table = Notary::query()->findOrFail($id);
-        return view('tables.notary.edit', compact('notaries_table'));
+        $notaries = Notary::all();
+        $notaries_table = NotaryTable::query()->findOrFail($id);
+        return view('tables.notary.edit', compact('notaries_table', 'notaries'));
     }
 
     public function update(
@@ -102,8 +116,7 @@ class NotaryController extends Controller
         $homePhone = UsersHelper::getActualPhone($request->input('home_phone'));
         $workPhone = UsersHelper::getActualPhone($request->input('work_phone'));
 
-        $notary = Notary::query()->findOrFail($id);
-//        $notary = Notary::query()->updateOrCreate()->findOrFail($id);
+        $notary = NotaryTable::query()->findOrFail($id);
 
         $total = $this->service->getTotal(
             $request->input('delayed_od'),
@@ -122,6 +135,7 @@ class NotaryController extends Controller
                 $request->input('identification'),
                 $request->input('full_name'),
                 $mobilePhone,
+                $request->notary_id,
                 $request->input('date_of_issue'),
                 $request->input('loan_term'),
                 $request->input('issued_amount'),
@@ -142,14 +156,21 @@ class NotaryController extends Controller
             return redirect()->route('table-notary-index')->with('message', 'Сохранено!');
 
         }catch (\Throwable $err){
-            Log::error("Directories: update Notary-table error. " . $err->getMessage() . $err->getTraceAsString());
+            Log::error("Directories: update NotaryTable-table error. " . $err->getMessage() . $err->getTraceAsString());
             return redirect()->back()->withErrors(['Ошибка сохранения']);
         }
     }
 
     public function import()
     {
-        return view('tables.notary.import');
+        $defaultSettings  = DefaultSetting::query()->pluck('notary_cost');
+
+        if ($defaultSettings[0] === '0') {
+            return redirect()->back()->withErrors(['Укажите сумму Нотариальных расходов']);
+        }
+
+        $notaries = Notary::all();
+        return view('tables.notary.import', compact('notaries'));
     }
 
     public function parsing(Parsing $request)
@@ -177,8 +198,8 @@ class NotaryController extends Controller
                         $collection[17],
                         $notary_cost
                     );
-
-                        $getRepeat = Notary::query()->where('number_loan', $collection[0])->first();
+                        // пропускаем повторяющиеся данные
+                        $getRepeat = NotaryTable::query()->where('number_loan', $collection[0])->first();
                         if ($getRepeat != null) {
                             continue;
                         }
@@ -190,6 +211,7 @@ class NotaryController extends Controller
                             $collection[3],
                             $collection[4],
                             $mobilePhone,
+                            $request->notary_id,
                             $date_of_issue = Carbon::parse($collection[11])->format("Y-m-d"),
                             $collection[12],
                             $collection[14],
@@ -220,7 +242,7 @@ class NotaryController extends Controller
 
     public function destroy(int $id)
     {
-        $notary = Notary::query()->findOrFail($id);
+        $notary = NotaryTable::query()->findOrFail($id);
         $notary->delete();
 
         return redirect()->back();
@@ -228,21 +250,151 @@ class NotaryController extends Controller
 
     public function restore(int $id)
     {
-        $brand = Notary::withTrashed()->findOrFail($id);
-        $brand->restore();
+        $notary = NotaryTable::withTrashed()->findOrFail($id);
+        $notary->restore();
 
         return redirect()->back();
     }
+
     public function search(Request $request)
     {
-    $notaryTablesSearches = Notary::withTrashed()
-        ->where('number_loan', 'like', $request->input('search'))
-        ->orWhere('iin', 'like', $request->input('search'))
-        ->orWhere('identification', 'like', $request->input('search'))
-        ->orWhere('full_name', 'like', '%' .$request->input('search'). '%')
-        ->orderByDesc('created_at')
-        ->get();
-    return view('tables.notary.search', compact('notaryTablesSearches'));
+        $rules = [
+            'search'    => 'nullable|string|min:1|max:100',
+            'notary'   => 'nullable|numeric',
+            'transfer_date'    => 'nullable|string'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator->errors());
+        }
+        //получаем коллекцию Нотариусов
+        $notaries = Notary::all();
+
+        //получаем дату передачи Нотариусу
+        $dates = NotaryTable::all()->pluck('transfer_date');
+
+        $notary = null;
+        if (!empty($request->input('notary'))) {
+            //получаем сущность найденную в коллекции Нотариус
+            $notary = Notary::query()->findOrFail($request->input('notary'));
+        }
+
+        try {
+            $notaryTablesSearches = $this->repository->getSearch(
+                $request->input('search'),
+                $notary,
+                $request->input('transfer_date')
+            );
+
+            return view('tables.notary.search', compact(
+                'notaryTablesSearches',
+                'notaries',
+                'dates'
+            ));
+
+        }catch (\Throwable $err) {
+            Log::error("NotaryTables: Filtering error in NotaryTables. " . $err->getMessage() . $err->getTraceAsString());
+            return redirect()->back()->withInput()->withErrors(['Ошибка поиска']);
+        }
+    }
+
+    public function export()
+    {
+        //Устанавливаем цвет заливки и размер шрифта заголовка
+        $header_style = (new StyleBuilder())
+            ->setFontSize(10)
+            ->setBackgroundColor("ffff00")
+            ->build();
+
+        //Устанавливаем размер шрифта основного текста
+        $rows_style = (new StyleBuilder())
+            ->setFontSize(10)
+            ->build();
+
+        //Получаем данные для Экспорта из строки запроса
+        $data = request()->query('data');
+
+        if (!empty($data)) {
+
+            if (empty($data['search'])) {
+                $data['search'] = null;
+            }
+            if (empty($data['transfer_date'])) {
+                $data['transfer_date'] = null;
+            }
+
+            $notary = null;
+            if (!empty($data['notary'])) {
+                $notary = Notary::query()->findOrFail($data['notary']);
+            }
+
+           $notaryTablesSearches = $this->repository->getSearch(
+               $data['search'],
+               $notary,
+               $data['transfer_date']
+           );
+
+            $item = collect([]);
+
+            foreach ($notaryTablesSearches as $items) {
+                $item->push(
+                    [
+                        'Номер займа' => $items['number_loan'],
+                        'ИИН' => $items['iin'],
+                        'Уд.личности' => $items['identification'],
+                        'Ф.И.О' => $items['full_name'],
+                        'Мобильный телефон' => $items['mobile_phone'],
+                        'Срок займа' => $items['loan_term'],
+                        'Выданная сумма' => $items['issued_amount'],
+                        'День просрочки' => $items['number_of_day_overdue'],
+                        'Просрочка ОД' => $items['delayed_od'],
+                        'Просрочка %' => $items['delayed_prc'],
+                        'Просрочка штрафы' => $items['delayed_fines'],
+                        'Сумма по исполнительной надписи' => $items['total'],
+                        'Нотартальные расходы' => $items['notary_cost'],
+                        'Общая сумма с нотариальными расходами' => $items['total_with_notary_cost']
+                    ]
+                );
+
+                (new FastExcel($item))
+                    ->headerStyle($header_style)
+                    ->rowsStyle($rows_style)
+                    ->export('export.xlsx');
+            }
+
+            return redirect()->back()->with('message', 'Файл выгружен!');
+        }
+        return redirect()->back()->with('message', 'Данные отсутствуют');
+    }
+
+    public function check()
+    {
+        return view('tables.notary.check');
+    }
+
+    public function parseCheck(Request $request)
+    {
+        if ($request->hasFile('checkFile')) {
+            $fileForChecks = (new FastExcel)->withoutHeaders()->import($request->file('checkFile'));
+
+            $dataForCheck = collect([]);
+
+            foreach ($fileForChecks as $fileForCheck) {
+                if (!empty($fileForCheck[0]) && is_numeric($fileForCheck[0])) {
+                    $dataForCheck->push(
+                        [
+                            'number_loan' => $fileForCheck[0],
+                            'status' => $fileForCheck[30],
+                            'partPayment' => $fileForCheck[33],
+                        ]
+                    );
+                }
+            }
+            //body
+        }
+
     }
 
 }

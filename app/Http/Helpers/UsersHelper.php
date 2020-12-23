@@ -14,7 +14,7 @@ class UsersHelper
         $phoneFormat = Str::of($phone)->replaceMatches('/\D/u', '');
 
         if (iconv_strlen($phoneFormat) > 10) {
-            $phoneFormat =  substr($phoneFormat, 1);
+            $phoneFormat =  substr($phoneFormat, 1, 10);
         }
 
         return "7{$phoneFormat}";
