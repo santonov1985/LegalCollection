@@ -17,7 +17,7 @@ class CreateNotariesTableTable extends Migration
             $table->id();
             $table->integer('notary_id')->unsigned();
             $table->foreign('notary_id')->references('id')->on('notaries')->cascadeOnDelete();
-            $table->integer('number_loan')->unique();
+            $table->string('number_loan')->unique();
             $table->string('iin');
             $table->string('identification')->unique();
             $table->string('full_name');
@@ -28,9 +28,9 @@ class CreateNotariesTableTable extends Migration
             $table->string('residence_address')->nullable();
             $table->string('place_of_residence')->nullable();
             $table->string('date_of_issue');
-            $table->integer('loan_term');
-            $table->integer('issued_amount');
-            $table->integer('number_of_day_overdue');
+            $table->string('loan_term');
+            $table->string('issued_amount');
+            $table->string('number_of_day_overdue');
             $table->double('delayed_od');
             $table->double('delayed_prc');
             $table->double('delayed_fines');
@@ -38,7 +38,9 @@ class CreateNotariesTableTable extends Migration
             $table->double('notary_cost')->nullable();
             $table->double('total_with_notary_cost')->nullable();
             $table->string('transfer_date');
-//            $table->boolean('status');
+            $table->string('key_status')->nullable();
+            $table->string('part_payment')->nullable();
+            $table->string('status')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

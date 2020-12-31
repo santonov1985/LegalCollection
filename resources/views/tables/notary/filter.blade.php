@@ -8,10 +8,11 @@
                             type="text"
                             name="search"
                             value="{{ request()->search ?? '' }}"
+                            id="search_input"
                             class="form-control"
                             placeholder="Номер займа, ИИН, удостоверение личности, Ф.И.О, день прострочки">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-light">Искать</button>
+                            <button type="submit" class="btn btn-light" id="search_btn" disabled="disabled">Искать</button>
                         </div>
                     </div>
                 </div>

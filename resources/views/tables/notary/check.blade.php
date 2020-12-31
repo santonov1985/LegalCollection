@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <form action="{{ route('table-notary-parseCheck') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('table-notary-parseCheck', request()->query()) }}" method="post" enctype="multipart/form-data">
             @csrf
                 <div class="row">
                     <div class="col-sm-4">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="btn-toolbar">
-                    <button  type="submit" class="btn btn-primary" >Провести сверку</button>
+                    <button  type="submit" class="btn btn-primary" >Добавить данные</button>
                 </div>
             </form>
         </div>

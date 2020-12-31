@@ -45,4 +45,16 @@ $(document).ready(function() {
             }
         }
     });
+    // Скрытие кнопки поиск
+    $("#search_input").on("input",() => {
+        console.log("1", $("#search_input").val().length);
+        if ($("#search_input").val().length > 0) {
+            $("#search_btn").attr("disabled", false);
+            console.log("true");
+        } else {
+            $("#search_btn").attr("disabled", true);
+            console.log("false");
+        }
+    });
+
 });

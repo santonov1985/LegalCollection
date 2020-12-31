@@ -116,7 +116,7 @@
                 <div class="form-group ml-1">
                     <a href="{{ route('table-notary-export', ['data' => request()->query()]) }}" class="btn btn-dark"> Выгрузить в файл </a>
 
-                    <a href = "{{route('table-notary-checkForm')}}" class="btn btn-outline-dark ml-2"> Провести сверку </a>
+                    <a href = "{{ route('table-notary-checkForm', request()->query()) }}" class="btn btn-outline-dark ml-2"> Провести сверку </a>
                 </div>
             </div>
         </div>

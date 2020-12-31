@@ -158,8 +158,11 @@ class NotaryRepository
 
         return $notary;
     }
-    public function manyUpdate()
+    public function addingToDBCheckData(NotaryTable $getEntity, int $key_status, int $part_payment)
     {
+        $getEntity->key_status = $key_status;
+        $getEntity->part_payment = $part_payment;
+        $getEntity->saveOrFail();
 
     }
 }

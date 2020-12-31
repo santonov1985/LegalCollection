@@ -26,7 +26,7 @@ class Store extends FormRequest
         return [
             'title' => 'required|string|min:5',
             'email' => 'nullable',
-            'phone' => 'nullable',
+            'phone' => 'nullable|max:11',
             'description' => 'nullable|min:5'
         ];
     }

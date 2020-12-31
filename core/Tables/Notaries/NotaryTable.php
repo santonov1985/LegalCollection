@@ -36,6 +36,8 @@ use core\Directories\Notaries\Notary;
  * @property Carbon $deleted_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property integer $key_status
+ * @property integer $part_payment
  */
 class NotaryTable extends Model
 {
@@ -51,13 +53,14 @@ class NotaryTable extends Model
     public function scopeSearch($query, string $string = null)
     {
         if ($string !== null) {
-            return $query->where('number_loan', 'LIKE', $string)
-                ->orWhere('iin', 'LIKE', $string)
-                ->orWhere('identification', 'LIKE', $string)
-                ->orWhere('full_name', 'LIKE', '%' .$string. '%')
-                ->orWhere('number_of_day_overdue', 'like', $string);
+             return $query->where('number_loan', $string)
+                 ->orWhere('iin', $string)
+                 ->orWhere('identification', $string)
+                 ->orWhere('full_name', 'LIKE', '%' .$string. '%')
+                 ->orWhere('number_of_day_overdue', $string);
         }
-        return null;
+
+//        return null;
     }
 
     public function scopeNotary($query, Notary $notary = null)
@@ -65,7 +68,8 @@ class NotaryTable extends Model
         if ($notary !== null) {
             return $query->where('notary_id', $notary->id);
         }
-        return null;
+
+//        return null;
     }
 
     public function scopeDate($query, string $date = null)
@@ -73,7 +77,8 @@ class NotaryTable extends Model
         if ($date !== null) {
             return $query->where('transfer_date', $date);
         }
-        return null;
+
+//        return null;
     }
 
 }

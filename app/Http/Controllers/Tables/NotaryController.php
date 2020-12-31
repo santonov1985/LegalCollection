@@ -125,8 +125,6 @@ class NotaryController extends Controller
             $request->input('notary_cost')
         );
 
-        // (new TablesHelper)->numericClear($request->input('issued_amount'));
-
         try {
             $this->repository->updateNotary(
                 $notary,
@@ -200,7 +198,7 @@ class NotaryController extends Controller
                     );
                         // пропускаем повторяющиеся данные
                         $getRepeat = NotaryTable::query()->where('number_loan', $collection[0])->first();
-                        if ($getRepeat != null) {
+                        if ($getRepeat !== null) {
                             continue;
                         }
 
@@ -354,7 +352,9 @@ class NotaryController extends Controller
                         'Просрочка штрафы' => $items['delayed_fines'],
                         'Сумма по исполнительной надписи' => $items['total'],
                         'Нотартальные расходы' => $items['notary_cost'],
-                        'Общая сумма с нотариальными расходами' => $items['total_with_notary_cost']
+                        'Общая сумма с нотариальными расходами' => $items['total_with_notary_cost'],
+                        'Статус' => $items['key_status'],
+                        'Погашение' => $items['part_payment'],
                     ]
                 );
 
@@ -371,29 +371,42 @@ class NotaryController extends Controller
 
     public function check()
     {
-        return view('tables.notary.check');
+        $dataSearch = request()->query('dataSearch');
+        return view('tables.notary.check',compact('dataSearch'));
     }
 
     public function parseCheck(Request $request)
     {
+        $rules = [
+            'checkFile'    => 'required|mimes:xlsx'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator->errors());
+        }
+
         if ($request->hasFile('checkFile')) {
             $fileForChecks = (new FastExcel)->withoutHeaders()->import($request->file('checkFile'));
 
-            $dataForCheck = collect([]);
-
             foreach ($fileForChecks as $fileForCheck) {
                 if (!empty($fileForCheck[0]) && is_numeric($fileForCheck[0])) {
-                    $dataForCheck->push(
-                        [
-                            'number_loan' => $fileForCheck[0],
-                            'status' => $fileForCheck[30],
-                            'partPayment' => $fileForCheck[33],
-                        ]
-                    );
+
+                    $getEntity = NotaryTable::query()->where('number_loan', $fileForCheck[0])->first();
+
+                    if ($getEntity !== null) {
+                        $this->repository->addingToDBCheckData(
+                            $getEntity,
+                            $fileForCheck[30],
+                            $fileForCheck[33]
+                        );
+                    }
                 }
             }
-            //body
+            return redirect()->route('table-notary-search', $request->query())->with('message', 'Данные добавленны!');
         }
+        return redirect()->back()->with('message', 'Файл не выбран');
 
     }
 
