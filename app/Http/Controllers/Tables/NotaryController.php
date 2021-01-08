@@ -181,57 +181,65 @@ class NotaryController extends Controller
             $collections = (new FastExcel)->withoutHeaders()->import($request->file('excelFile'));
 
             foreach ($collections as $key => $collection) {
-                if (!empty($collection[0]) && is_numeric($collection[0])) {
+
+                if ($key > 0) {
                     if ($collection[23] >= $request->dayOfOverdue) {
+                        if (empty($collection[0]) || !is_numeric($collection[0])) {
+                            return redirect()->back()->withErrors(['Не верные данные в полях таблицы файла!']);
+                        }
+//                if (!empty($collection[0]) && is_numeric($collection[0])) {
+//                    if ($collection[23] >= $request->dayOfOverdue) {
 
-                    // приводим номера телефонов в правельный вид
-                    $homePhone = UsersHelper::getActualPhone($collection[6]);
-                    $mobilePhone = UsersHelper::getActualPhone($collection[7]);
-                    $workPhone = UsersHelper::getActualPhone($collection[8]);
+                        // приводим номера телефонов в правельный вид
+                        $homePhone = UsersHelper::getActualPhone($collection[6]);
+                        $mobilePhone = UsersHelper::getActualPhone($collection[7]);
+                        $workPhone = UsersHelper::getActualPhone($collection[8]);
 
-                    // получаем сумму 4-х полей (Просрочка ОД, Просрочка %, Просрочка штрафы и Общая сумма с Нот. расх)
-                    $total = $this->service->getTotal(
-                        $collection[15],
-                        $collection[16],
-                        $collection[17],
-                        $notary_cost
-                    );
+                        // получаем сумму 4-х полей (Просрочка ОД, Просрочка %, Просрочка штрафы и Общая сумма с Нот. расх)
+                        $total = $this->service->getTotal(
+                            $collection[15],
+                            $collection[16],
+                            $collection[17],
+                            $notary_cost
+                        );
                         // пропускаем повторяющиеся данные
                         $getRepeat = NotaryTable::query()->where('number_loan', $collection[0])->first();
                         if ($getRepeat !== null) {
                             continue;
                         }
 
-                    try {
-                        $this->repository->createNotary(
-                            $collection[0],
-                            $collection[2],
-                            $collection[3],
-                            $collection[4],
-                            $mobilePhone,
-                            $request->notary_id,
-                            $date_of_issue = Carbon::parse($collection[11])->format("Y-m-d"),
-                            $collection[12],
-                            $collection[14],
-                            $collection[15],
-                            $collection[16],
-                            $collection[17],
-                            $collection[23],
-                            $total,
-                            $transferDate = Carbon::now()->format("Y-m-d"),
-                            $notary_cost,
-                            $collection[5],
-                            $collection[10],
-                            $collection[9],
-                            $homePhone,
-                            $workPhone
-                        );
+                        try {
+                            $this->repository->createNotary(
+                                $collection[0],
+                                $collection[2],
+                                $collection[3],
+                                $collection[4],
+                                $mobilePhone,
+                                $request->notary_id,
+                                $date_of_issue = Carbon::parse($collection[11])->format("Y-m-d"),
+                                $collection[12],
+                                $collection[14],
+                                $collection[15],
+                                $collection[16],
+                                $collection[17],
+                                $collection[23],
+                                $total,
+                                $transferDate = Carbon::now()->format("Y-m-d"),
+                                $notary_cost,
+                                $collection[5],
+                                $collection[10],
+                                $collection[9],
+                                $homePhone,
+                                $workPhone
+                            );
 
-                    }catch (\Throwable $err){
-                        Log::error("Directories: Error adding imported file. " . $err->getMessage() . $err->getTraceAsString());
-                        return redirect()->back()->withErrors(['Ошибка сохранения']);
+                        } catch (\Throwable $err) {
+                            Log::error("Directories: Error adding imported file. " . $err->getMessage() . $err->getTraceAsString());
+                            return redirect()->back()->withErrors(['Ошибка сохранения']);
+                        }
+
                     }
-                    }
+//                return redirect()->back()->withErrors( ['Не верные данные в полях таблицы файла!'] );
                 }
             }
             return redirect()->route('table-notary-index')->with('message', 'Сохранено!');
@@ -354,7 +362,7 @@ class NotaryController extends Controller
                         'Нотартальные расходы' => $items['notary_cost'],
                         'Общая сумма с нотариальными расходами' => $items['total_with_notary_cost'],
                         'Статус' => $items['key_status'],
-                        'Погашение' => $items['part_payment'],
+                        'Частичное погашение' => $items['part_payment'],
                     ]
                 );
 
@@ -371,8 +379,7 @@ class NotaryController extends Controller
 
     public function check()
     {
-        $dataSearch = request()->query('dataSearch');
-        return view('tables.notary.check',compact('dataSearch'));
+        return view('tables.notary.check');
     }
 
     public function parseCheck(Request $request)

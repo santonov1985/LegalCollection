@@ -52,18 +52,17 @@ class NotaryController extends Controller
     {
         $phone = UsersHelper::getActualPhone($request->input('phone'));
 
-        $phoneWithFirstNumeral = $this->service->addFirstNumber($phone);
-
         try {
 
             $this->repository->createNotary(
                 $request->input('title'),
                 $request->input('email'),
-                $phoneWithFirstNumeral,
+                $phone,
                 $request->input('description')
             );
 
             return redirect()->route('notary-index')->with('message', 'Добавлено!');
+
         }catch (\Throwable $err){
             Log::error("Directories: add new NotaryTable error. " . $err->getMessage() . $err->getTraceAsString());
             return redirect()->back()->withErrors(['Ошибка добавления']);

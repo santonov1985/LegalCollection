@@ -35,7 +35,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Нотариус:</label>
-                            <select class="form-control" name="notary_id">
+                            <select class="form-control" name="notary_id" required>
                                 <option value="" hidden>Выберите нотариус</option>
                                 @foreach($notaries as $notary)
                                     <option value="{{ $notary->id }}">{{ $notary->title }}</option>

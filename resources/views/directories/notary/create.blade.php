@@ -25,15 +25,15 @@
                         @csrf
                         <div class="form-group">
                             <label>Название:</label>
-                            <input type="text" name="title" class="form-control">
+                            <input type="text" name="title" class="form-control" value = {{ old('title') }}>
                         </div>
                         <div class="form-group">
                             <label>E-mail:</label>
-                            <input type="text" name="email" class="form-control">
+                            <input type="text" name="email" class="form-control" value = {{ old('email') }}>
                         </div>
                         <div class="form-group">
                             <label>Телефон:</label>
-                            <input type="number" min="11" name="phone" class="form-control">
+                            <input type="number" min="11" name="phone" class="form-control" value = {{ old('phone') }}>
                         </div>
                         <div class="form-group">
                             <label>Описание:</label>
